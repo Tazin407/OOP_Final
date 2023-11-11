@@ -2,7 +2,7 @@ from datetime import datetime
 #For the history
 
 class Bank:    
-    Adaccounts= [] #admin accounts
+    Adaccounts= [{"Username": "Steven", "Email": "steven29@gmail.com"}] #admin accounts
     Accounts= [] #user accounts
     balance= 0
     Loan_amount=0
@@ -29,7 +29,7 @@ class Admin(Bank):
         self.name= name
         self.email= email
         # self.Acc_type= Acc_type
-        Bank.Adaccounts.append(self)
+        #Bank.Adaccounts.append(self)
         
     def show_available_balance(self):
         print(f"\nTotal bank balance is {Bank.balance} Taka")
@@ -101,7 +101,7 @@ class User:
         else: 
             print("\nNot enough balance")
             
-            
+# Admin info- Steven, steven29@gmail.com, 407         
 currentUser= None
 num= 1372 #for the user id
 admin_code= 407 #admins have to enter it to register
@@ -109,59 +109,49 @@ Loan= True
 
 while True:
     if currentUser==None:
-        
-        LR= input("Login or Register ?(L/R) ")
-        if LR== "R":
-            AU= input("Admin or User? ")
-            if AU== "Admin" or AU=="admin":
+        start=input("Choose Option-\n1.Admin\n2.User\n3.exit\n")
+        if start=='3':
+            break
+        elif start=='2':
+            LR=input("Login or Register? (L/R) ")
+            if LR=='R':
+                  name= input("Name: ")
+                  email= input("Email: ")
+                  address= input("Address: ")
+                  acc_type= input("Account type: ")
+                  num+=1
+                  numm=num
+                  currentUser= User(name, email, address, acc_type, numm)
+                  print(f"\nNew user account is created. Your user ID is {numm}")
+                  
+            elif LR=='L':
+                  email= input("Email: ")
+                  user_id=int(input("User Id: "))
+                  flag=0
+                  for acc in Bank.Accounts:
+                      if acc.email==email and acc.user_id== user_id:
+                          flag=1
+                          currentUser= acc
+                          print("\nLogin Succesful")
+                          
+                  if flag==0:
+                      print("\nWrong info. Login failed.")
+                
+        elif start=='1':
                 name= input("Name: ")
                 email= input("Email: ")
                 code= int(input("Admin code: "))
-                if code== admin_code:
-                    currentUser= Admin(name, email)
-                
-                else: 
-                    print("\nWrong code !!")
-                    
-            elif AU=="User" or AU=="user":
-                name= input("Name: ")
-                email= input("Email: ")
-                address= input("Address: ")
-                acc_type= input("Account type: ")
-                num+=1
-                numm=num
-                currentUser= User(name, email, address, acc_type, numm)
-                print(f"\nNew user account is created. Your user ID is {numm}")
-                
-            
-        elif LR== "L":
-                        
-            AU= input("Admin or User? ")
-            if AU== "Admin" or AU=="admin":                 
-                name= input("Name: ")
-                email= input("Email: ")
                 flag=0
-                for acc in Bank.Adaccounts:
-                    if acc.name==name and acc.email==email:
-                        print("\nLogin successful ")
-                        currentUser= acc
-                        flag=1
+                if code==admin_code:
+                    for acc in Bank.Adaccounts:
+                        if acc["Username"]==name and acc["Email"]==email:
+                            print("\nLogin successful ")
+                            currentUser= Admin(name,email)
+                            flag=1
                         
-                if flag==0:
+                if flag==0 or code!=admin_code:
                     print("\nWrong info. Try again")
-                    
-            elif AU=="User" or AU=="user":
-                email= input("Email: ")
-                user_id=int(input("User Id: "))
-                flag=0
-                for acc in Bank.Accounts:
-                    if acc.email==email and acc.user_id== user_id:
-                        flag=1
-                        currentUser= acc
-                        print("\nLogin Succesful")
-                        
-                if flag==0:
-                    print("\nWrong info. Login failed.")
+              
                         
     else:
         if currentUser.__class__==Admin:
@@ -170,7 +160,8 @@ while True:
             print(f"3. See total bank balance")
             print(f"4. See total loan amount")
             print(f"5. Turn off loan feature")
-            print(f"6. Logout")
+            print(f"6. Create a user account")
+            print(f"7. Logout")
             op= input("Choose option ")
             if op=='1':
                 currentUser.show_accounts()
@@ -190,7 +181,16 @@ while True:
             elif op=='5':
                 Loan= False
                 
-            elif op=='6':
+            elif op=='6':                
+                name= input("Name: ")
+                email= input("Email: ")
+                address= input("Address: ")
+                acc_type= input("Account type: ")
+                num+=1
+                numm=num
+                print(f"\nNew user account is created. The user ID is {numm}")
+                
+            elif op=='7':
                 currentUser= None
         
         elif currentUser.__class__==User:
@@ -240,3 +240,5 @@ while True:
                 
         
                 
+            
+        
